@@ -7,17 +7,14 @@ void banner(){
     printf("****************************\n\n");
 }
 
-void capturarchute(){
-    char chutes[26]; // Corrigido para armazenar caracteres
-    int tentativas = 0;
-
+void capturarchute(char chutes[26], int *tentativas){
     printf("\nInforme uma letra: ");
     char chute;
     scanf(" %c", &chute); // Espaço antes do %c para evitar problemas com buffer
 
     // Armazena o chute no array de chutes
-    chutes[tentativas] = chute;
-    tentativas++;
+    chutes[(*tentativas)] = chute;
+    (*tentativas)++;
 }
 
 
@@ -55,7 +52,7 @@ int main() {
             }
         }
         // capturar chute
-        capturarchute();
+        capturarchute(chutes, &tentativas);
 
     } while (!acertou && !enforcou);
 
