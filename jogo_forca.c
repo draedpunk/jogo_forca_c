@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#include "forca_funcoes.h" // header file
+#include "dados\forca_funcoes.h" // header file
 
 char palavrasecreta[20];
 char chutes[26]; // Corrigido para armazenar caracteres
@@ -56,7 +56,8 @@ void desenhahangman(){
 void escolhepalavra(){
     FILE* f;
     // abre o arquivo e lê
-    f = fopen("C:\\Users\\Dell\\OneDrive\\Desktop\\Estudos\\jogo-forca-em-c\\palavras.txt", "r");
+    // f = fopen("dados\\palavras.txt", "r");
+    f = fopen("C:\\Users\\Dell\\OneDrive\\Desktop\\Estudos\\jogo-forca-em-c\\dados\\palavras.txt", "r");
 
     if (f == 0){
         printf("Banco de dados nao disponivel.\n\n");
