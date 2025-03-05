@@ -131,9 +131,9 @@ void hangman() {
 
     printf("    +----+\n");
     printf("    |    |\n");
-    printf("    %c   |\n", (erros >= 1 ? 'O' : ' '));  
-    printf("   %c%c%c  |\n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 3 ? '\\' : ' '));
-    printf("   %c %c  |\n", (erros >= 4 ? '/' : ' '), (erros >= 4 ? '\\' : ' '));
+    printf("    %c    |\n", (erros >= 1 ? 'O' : ' '));  
+    printf("   %c%c%c   |\n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 3 ? '\\' : ' '));
+    printf("   %c %c   |\n", (erros >= 4 ? '/' : ' '), (erros >= 4 ? '\\' : ' '));
     printf("         |\n");
     printf("  =========\n");
     printf("\n\n");
