@@ -24,6 +24,18 @@ void capturarchute(){
     chutesdados++;
 }
 
+void hangman(){
+    printf("    +----+\n");
+    printf("    |    |\n");
+    printf("    O    |\n");
+    printf("   /|\\    |\n");
+    printf("   / \\    |\n");
+    printf("         |\n");
+    printf("  =========\n");
+    printf("\n\n");
+  
+}
+
 int jachutou(char letra){
     int achou = 0; // setted as False :)
 
@@ -53,6 +65,39 @@ void desenhahangman(){
     }
 }
 
+void adicionarpalavra(){
+    char pergunta;
+    printf("Deseja adicionar uma nova palavra ao jogo? (S/N) \n");
+    scanf(" %c", &pergunta);
+
+    if(pergunta == 'S' || pergunta == 's'){
+        char novapalavra[20];
+        printf("Informe a nova palavra a ser adicionada: ");
+        scanf("%s", &novapalavra);
+
+        FILE* f;
+        f = fopen("C:\\Users\\Dell\\OneDrive\\Desktop\\Estudos\\jogo-forca-em-c\\dados\\palavras.txt", "r+");
+        if (f == 0){
+            printf("Banco de dados nao disponivel.\n\n");
+            exit(1);
+        }
+        
+        // pega a qtd de palavras q ja tinha no arquivo
+        int qtd;
+        fscanf(f, "%d", &qtd);
+        qtd++;
+        // posiciona o ponteiro do arquivo para o inicio
+        fseek(f, 0, SEEK_SET);
+        fprintf(f, "%d", qtd);
+
+        // posiciona a set ano fim
+        fseek(f, 0, SEEK_END);
+        fprintf(f, "\n%s", novapalavra);
+
+        fclose(f);
+    }
+}
+
 void escolhepalavra(){
     FILE* f;
     // abre o arquivo e lê
@@ -78,7 +123,8 @@ void escolhepalavra(){
     for (int i = 0; i <= randomico; i++){
         fscanf(f, "%s", palavrasecreta);
     }
-    
+
+    fclose(f);
 }
 
 int acertou(){
@@ -112,6 +158,7 @@ int enforcou(){
 int main() {
     escolhepalavra();
     banner();
+    hangman();
 
     do {
         // Exibir palavra com letras já acertadas
@@ -122,5 +169,42 @@ int main() {
 
     } while (!acertou() && !enforcou());
 
+    if (acertou()){
+        printf("\nParabens, voce ganhou!\n\n");
+
+        printf("       ___________      \n");
+        printf("      '._==_==_=_.'     \n");
+        printf("      .-\\:      /-.    \n");
+        printf("     | (|:.     |) |    \n");
+        printf("      '-|:.     |-'     \n");
+        printf("        \\::.    /      \n");
+        printf("         '::. .'        \n");
+        printf("           ) (          \n");
+        printf("         _.' '._        \n");
+        printf("        '-------'       \n\n");
+
+    } 
+    else {
+        printf("\nPuxa, voce foi enforcado!\n");
+        printf("A palavra era **%s**\n\n", palavrasecreta);
+
+        printf("    _______________         \n");
+        printf("   /               \\       \n"); 
+        printf("  /                 \\      \n");
+        printf("//                   \\/\\  \n");
+        printf("\\|   XXXX     XXXX   | /   \n");
+        printf(" |   XXXX     XXXX   |/     \n");
+        printf(" |   XXX       XXX   |      \n");
+        printf(" |                   |      \n");
+        printf(" \\__      XXX      __/     \n");
+        printf("   |\\     XXX     /|       \n");
+        printf("   | |           | |        \n");
+        printf("   | I I I I I I I |        \n");
+        printf("   |  I I I I I I  |        \n");
+        printf("   \\_             _/       \n");
+        printf("     \\_         _/         \n");
+        printf("       \\_______/           \n");
+    }
+    adicionarpalavra();
     return 0;
 }
