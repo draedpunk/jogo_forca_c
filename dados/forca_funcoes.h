@@ -5,6 +5,7 @@ int jachutou(char letra);
 void desenhahangman();
 void escolhepalavra();
 int acertou();
+int chuteserrados();
 int enforcou();
 void escolhepalavra();
 void adicionarpalavra();

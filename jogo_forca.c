@@ -2,10 +2,10 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#include "dados\forca_funcoes.h" // header file
+#include "dados/forca_funcoes.h" // Corrigido caminho do arquivo de cabeçalho
 
 char palavrasecreta[20];
-char chutes[26]; // Corrigido para armazenar caracteres
+char chutes[26]; 
 int chutesdados = 0;
 
 void banner(){
@@ -17,52 +17,32 @@ void banner(){
 void capturarchute(){
     printf("\nInforme uma letra: ");
     char chute;
-    scanf(" %c", &chute); // Espaço antes do %c para evitar problemas com buffer
+    scanf(" %c", &chute); 
 
-    // Armazena o chute no array de chutes
     chutes[chutesdados] = chute;
     chutesdados++;
 }
 
-void hangman(){
-    printf("    +----+\n");
-    printf("    |    |\n");
-    printf("    O    |\n");
-    printf("   /|\\    |\n");
-    printf("   / \\    |\n");
-    printf("         |\n");
-    printf("  =========\n");
-    printf("\n\n");
-  
-}
-
 int jachutou(char letra){
-    int achou = 0; // setted as False :)
-
     for (int j = 0; j < chutesdados; j++) {
         if (chutes[j] == letra) {
-            achou = 1;
-            break;
+            return 1;
         }
     }
-
-    return achou;
+    return 0;
 }
 
 void desenhahangman(){
     int tamanho = strlen(palavrasecreta);
 
     for (int i = 0; i < tamanho; i++) {
-        // aqui estava o for para saber se a letra dada pelo usurario
-        // estava presente
-        int achou = jachutou(palavrasecreta[i]);
-
-        if (achou) {
+        if (jachutou(palavrasecreta[i])) {
             printf("%c ", palavrasecreta[i]);
         } else {
             printf("_ ");
         }
     }
+    printf("\n");
 }
 
 void adicionarpalavra(){
@@ -73,24 +53,22 @@ void adicionarpalavra(){
     if(pergunta == 'S' || pergunta == 's'){
         char novapalavra[20];
         printf("Informe a nova palavra a ser adicionada: ");
-        scanf("%s", &novapalavra);
+        scanf("%s", novapalavra); // Corrigido: removido o &
 
         FILE* f;
         f = fopen("C:\\Users\\Dell\\OneDrive\\Desktop\\Estudos\\jogo-forca-em-c\\dados\\palavras.txt", "r+");
-        if (f == 0){
+        if (f == NULL){
             printf("Banco de dados nao disponivel.\n\n");
             exit(1);
         }
         
-        // pega a qtd de palavras q ja tinha no arquivo
         int qtd;
         fscanf(f, "%d", &qtd);
         qtd++;
-        // posiciona o ponteiro do arquivo para o inicio
+
         fseek(f, 0, SEEK_SET);
         fprintf(f, "%d", qtd);
 
-        // posiciona a set ano fim
         fseek(f, 0, SEEK_END);
         fprintf(f, "\n%s", novapalavra);
 
@@ -100,26 +78,19 @@ void adicionarpalavra(){
 
 void escolhepalavra(){
     FILE* f;
-    // abre o arquivo e lê
-    // f = fopen("dados\\palavras.txt", "r");
     f = fopen("C:\\Users\\Dell\\OneDrive\\Desktop\\Estudos\\jogo-forca-em-c\\dados\\palavras.txt", "r");
 
-    if (f == 0){
+    if (f == NULL){
         printf("Banco de dados nao disponivel.\n\n");
         exit(1);
     }
 
-    // descobre a quantidade de palavras no arquivo
-    // (ta na primeira linha)
     int qtdpalavras;
     fscanf(f, "%d", &qtdpalavras);
 
-    // calcula o numero randomico
     srand(time(0));
     int randomico = rand() % qtdpalavras;
 
-    // for roda na qtd de palavras q o arquivo tem
-    // e escolhe uma
     for (int i = 0; i <= randomico; i++){
         fscanf(f, "%s", palavrasecreta);
     }
@@ -131,14 +102,14 @@ int acertou(){
     int tamanho = strlen(palavrasecreta);
 
     for(int i = 0; i < tamanho; i++){
-        if (!jachutou((char) palavrasecreta[i])){
+        if (!jachutou(palavrasecreta[i])){
             return 0;
         }
     }
     return 1;
 }
 
-int enforcou(){
+int chuteserrados(){
     int tamanho = strlen(palavrasecreta);
     int erros = 0;
 
@@ -155,18 +126,31 @@ int enforcou(){
     return erros;
 }
 
+void hangman() {
+    int erros = chuteserrados();
+
+    printf("    +----+\n");
+    printf("    |    |\n");
+    printf("    %c   |\n", (erros >= 1 ? 'O' : ' '));  
+    printf("   %c%c%c  |\n", (erros >= 3 ? '/' : ' '), (erros >= 2 ? '|' : ' '), (erros >= 3 ? '\\' : ' '));
+    printf("   %c %c  |\n", (erros >= 4 ? '/' : ' '), (erros >= 4 ? '\\' : ' '));
+    printf("         |\n");
+    printf("  =========\n");
+    printf("\n\n");
+}
+
+int enforcou(){
+    return chuteserrados() >= 5;
+}
+
 int main() {
     escolhepalavra();
     banner();
-    hangman();
 
     do {
-        // Exibir palavra com letras já acertadas
+        hangman(); // Atualiza o boneco conforme os erros aumentam
         desenhahangman();
-
-        // capturar chute
         capturarchute();
-
     } while (!acertou() && !enforcou());
 
     if (acertou()){
